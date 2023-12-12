@@ -32,7 +32,26 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.get("/logout", async (req, res, next) => {
-  res.json({ message: "logout working" });
+  if (req.session.user) {
+    //destroy it
+    const { username } = req.session.user;
+    req.session.destroy((err) => {
+      if (err) {
+        res.json({
+          message:
+            "you can checkout any time you like, but you can never leave",
+        });
+      } else {
+        res.set(
+          "Set-Cookie",
+          "monkey=; SameSite=Strict; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+        ); // this is how you delete a cookie -- you set it to an empty string and set the expiration date to the past
+        res.json({ message: `Goodbye, ${username}` });
+      }
+    });
+  } else {
+    res.json({ message: "no session" });
+  }
 });
 
 module.exports = router;
