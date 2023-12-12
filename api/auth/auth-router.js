@@ -19,7 +19,13 @@ router.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const [user] = await User.findBy({ username });
-    console.log(user);
+    if (user && bcrypt.compareSync(password, user.password)) {
+      //start session
+      req.session.user = user; // very important line -- this is what signals the express session library to create the session and send the cookie back to the client
+      res.json({ message: `Welcome back, ${user.username}` });
+    } else {
+      next({ status: 401, message: "Invalid credentials" });
+    }
   } catch (err) {
     next(err);
   }
