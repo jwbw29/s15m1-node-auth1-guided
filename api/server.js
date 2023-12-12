@@ -22,7 +22,7 @@ server.use(
     saveUninitialized: false, // GDPR laws against setting cookies automatically -- client must approve
     store: new Store({
       // this is how we store sessions in the database
-      knex: require("../database/dbConfig.js"),
+      knex: require("../database/db-config.js"),
       tablename: "sessions",
       sidfieldname: "sid",
       createtable: true,
